@@ -130,7 +130,7 @@ const filteredInternships = computed(() => {
   return result;
 });
 
-// Ara butonuna tıklama
+// Ara butonuna tıklamaaaaaa
 const onSearch = () => {
   console.log("Arama yapıldı:", searchQuery.value);
 };
