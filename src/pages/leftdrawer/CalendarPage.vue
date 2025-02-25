@@ -17,7 +17,6 @@
       </q-card-section>
     </q-card>
 
-    <!-- Yeni Etkinlik Ekleme Butonu -->
     <div class="q-mt-md text-center">
       <q-btn
         label="Yeni Etkinlik Ekle"

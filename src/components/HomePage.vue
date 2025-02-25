@@ -39,6 +39,13 @@
           <q-item-section>Ana Sayfa</q-item-section>
         </q-item>
 
+        <q-item clickable v-ripple to="/basvuru-form" class="menu-item">
+          <q-item-section avatar>
+            <q-icon name="campaign" />
+          </q-item-section>
+          <q-item-section>Başvuru Formu</q-item-section>
+        </q-item>
+
         <q-item clickable v-ripple to="/basvuru-ilanlari" class="menu-item">
           <q-item-section avatar>
             <q-icon name="campaign" />
@@ -58,13 +65,6 @@
             <q-icon name="folder" />
           </q-item-section>
           <q-item-section>Başvurularım</q-item-section>
-        </q-item>
-
-        <q-item clickable v-ripple to="/courses" class="menu-item">
-          <q-item-section avatar>
-            <q-icon name="book" />
-          </q-item-section>
-          <q-item-section>Dersler</q-item-section>
         </q-item>
 
         <q-item clickable v-ripple to="/payments" class="menu-item">

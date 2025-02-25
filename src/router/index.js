@@ -6,8 +6,7 @@ import HomePage from "src/components/HomePage.vue";
 import CalendarPage from "src/pages/leftdrawer/CalendarPage.vue";
 import SubmissionsPage from "src/pages/leftdrawer/SubmissionsPage.vue";
 import PaymentsPage from "src/pages/leftdrawer/PaymentsPage.vue";
-
-import CoursesPage from "src/pages/leftdrawer/CoursesPage.vue";
+import BasvuruForm from "src/pages/leftdrawer/BasvuruForm.vue";
 
 const routes = [
   { path: "/", name: "Login", component: UserLogin },
@@ -22,7 +21,8 @@ const routes = [
     name: "CalendarPage",
     component: () => import("pages/leftdrawer/CalendarPage.vue"),
   },
-  { path: "/courses", name: "CoursesPage", component: CoursesPage },
+  { path: "/basvuru-form", name: "BasvuruForm", component: BasvuruForm },
+
   { path: "/payments", name: "PaymentsPage", component: PaymentsPage },
   { path: "/submissions", name: "SubmissionsPage", component: SubmissionsPage },
 ];

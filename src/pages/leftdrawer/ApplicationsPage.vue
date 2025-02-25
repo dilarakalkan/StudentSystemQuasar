@@ -180,37 +180,83 @@ const applyToInternship = (internship) => {
 .search-filter-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px;
   align-items: center;
-  background: #f8f9fa;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 20px;
+  background: #f0f4f8; /* Hafif pastel mavi arka plan */
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* Hafif gölge */
 }
 
 /* Staj Listesi */
 .internship-list {
-  padding: 100px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 /* Staj Kartları */
 .internship-card {
-  width: 100%; /* Eğer belirli bir genişlik belirtilmezse, konteynerin genişliği kadar olur */
-  max-width: 300px; /* Kartların maksimum genişliği olabilir */
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  background-color: #ffffff;
+  border: 1px solid #e6e9ed;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .internship-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.internship-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #007bff; /* Modern bir mavi tonu */
+  margin-bottom: 10px;
+}
+
+.internship-card p {
+  font-size: 0.95rem;
+  color: #5a5a5a;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+/* Genel Düğme Stili */
+.q-btn {
+  border-radius: 8px !important;
+  padding: 10px 20px !important;
+}
+
+.q-btn.unelevated {
+  box-shadow: none !important;
+}
+
+.q-btn:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: scale(1.03);
+}
+
+/* Tüm Tasarımı Modernleştiren Küçük Detaylar */
+.q-input,
+.q-select {
+  border-radius: 8px !important;
+}
+
+.q-input__inner,
+.q-select__inner {
+  background-color: #f9f9f9 !important;
+  border: 1px solid #dcdfe4 !important;
+}
+
+.q-input__inner:hover,
+.q-select__inner:hover {
+  border-color: #007bff !important;
 }
 </style>
