@@ -31,59 +31,45 @@
           <div class="text-caption">dilara.kalkan@std.ankara.edu.tr</div>
         </q-item>
 
-        <!-- Main -->
-        <q-item clickable v-ripple to="/home">
+        <!-- Main Menü -->
+        <q-item clickable v-ripple to="/home" class="menu-item">
           <q-item-section avatar>
             <q-icon name="home" />
           </q-item-section>
           <q-item-section>Ana Sayfa</q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple to="/basvuru-ilanlari">
+        <q-item clickable v-ripple to="/basvuru-ilanlari" class="menu-item">
           <q-item-section avatar>
             <q-icon name="campaign" />
           </q-item-section>
-          <q-item section>Başvuru İlanları</q-item>
+          <q-item-section>Başvuru İlanları</q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple to="calendar">
+        <q-item clickable v-ripple to="/calendar" class="menu-item">
           <q-item-section avatar>
             <q-icon name="calendar_today" />
           </q-item-section>
-          <q-item section>Başvuru Takvimi</q-item>
+          <q-item-section>Başvuru Takvimi</q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple to="/submissions">
+        <q-item clickable v-ripple to="/submissions" class="menu-item">
           <q-item-section avatar>
             <q-icon name="folder" />
           </q-item-section>
-          <q-item section>Başvurularım</q-item>
+          <q-item-section>Başvurularım</q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple to="/courses">
+        <q-item clickable v-ripple to="/courses" class="menu-item">
           <q-item-section avatar>
             <q-icon name="book" />
           </q-item-section>
           <q-item-section>Dersler</q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple to="/exams">
+        <q-item clickable v-ripple to="/payments" class="menu-item">
           <q-item-section avatar>
-            <q-icon name="assignment" />
-          </q-item-section>
-          <q-item section>Sınavlar</q-item>
-        </q-item>
-
-        <q-item clickable v-ripple to="/schedule">
-          <q-item-section avatar>
-            <q-icon name="/calendar_today" />
-          </q-item-section>
-          <q-item section>Ders Programı</q-item>
-        </q-item>
-
-        <q-item clickable v-ripple to="/payments">
-          <q-item-section avatar>
-            <q-icon name="/attach_money" />
+            <q-icon name="attach_money" />
           </q-item-section>
           <q-item-section>Ödeme İşlemleri</q-item-section>
         </q-item>
@@ -106,18 +92,6 @@
                     flat
                   />
                   <q-btn icon="send" label="Başvurularım" flat />
-                </q-card-section>
-              </q-card>
-            </q-layout-col>
-
-            <!-- Öğrenci İşlemleri Kartı -->
-
-            <q-layout-col cols="3" sm="4" md="2" lg="2">
-              <q-card class="q-pa-md card-custom q-mt-md">
-                <q-card-section>
-                  <div class="text-h6">Öğrenci İşlemleri</div>
-                  <q-btn icon="book" label="Dersler" flat />
-                  <q-btn icon="description" labell="Sınavlar" flat />
                 </q-card-section>
               </q-card>
             </q-layout-col>
@@ -187,43 +161,59 @@ const leftDrawerOpen = ref(true);
 </script>
 
 <style scoped>
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align text/icons at the start */
+  padding: 15px 20px; /* Uniform padding */
+  transition: background-color 0.2s ease;
+}
+
+.menu-item + .menu-item {
+  margin-top: 10px; /* Equal spacing between each item */
+}
+
+.menu-item:hover {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+}
+
+/* İkonlar için genişlik ayarı ve hizalama */
+.q-item-section[avatar] {
+  width: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.q-item-section {
+  font-size: 16px;
+  color: #333;
+}
+
+.q-item-section:hover {
+  color: #1976d2;
+}
+
+.q-avatar img {
+  border-radius: 50%;
+}
+
+/* Sayfa genelinde daha iyi görsel düzen */
+.q-drawer {
+  width: 260px;
+}
+
+.q-toolbar-title {
+  font-weight: bold;
+  font-size: 20px;
+}
+
 .app-footer {
   background-color: rgb(78, 131, 192);
   text-align: center;
   padding: 10px 0;
-}
-.card-width {
-  max-width: 700px; /* Kartın maksimum genişliği */
-  width: 100%; /* Kartın içeriğine göre genişliği */
-  min-height: 150px; /* Kartın minimum yüksekliği */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* İçerik düzeni */
-}
-.card-custom {
-  max-width: 700px; /* Kartın genişliğini sınırlayın */
-  min-height: 150px; /* Kartın minimum yüksekliği */
-  padding: 10px; /* Kartın iç kenar boşluğunu azaltın */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.profile-container {
-  position: absolute;
-  top: 16px; /* Yukarıdan boşluk */
-  right: 16px; /* Sağdan boşluk */
-  width: 300px; /* Kart genişliği */
-}
-
-.profile-card {
-  max-width: 300px;
-  min-height: 150px;
-}
-/* Kullanıcı Profili Kartı */
-
-.profile-card-container {
-  grid-column: 3; 
-  grid-row: span 3;
+  color: white;
+  font-weight: 500;
 }
 </style>

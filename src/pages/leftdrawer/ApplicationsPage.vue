@@ -1,42 +1,48 @@
 <template>
-  <q-page>
-    <div class="q-pa-md bg-light shadow-1 rounded my-div">
-      <!-- Arama Kutusu -->
+  <q-page class="q-pa-md">
+    <!-- Arama ve Filtreleme Bölümü -->
+    <div class="search-filter-container shadow-2 rounded-borders q-pa-md">
       <q-input
         v-model="searchQuery"
         filled
         label="Aranan Kelime"
         class="q-mr-md search-input"
-        placeholder="Arama yapın"
-      ></q-input>
+        placeholder="Başlık veya Şirket Ara..."
+        dense
+      />
 
       <q-select
-        v-model="sortOrder"
-        :options="sortOptions"
+        v-model="selectedField"
+        :options="fieldOptions"
         filled
-        label="Sıralama"
-        class="q-mr-md sort-select"
+        label="Alan"
+        class="q-mr-md"
+        dense
+        clearable
       />
 
-      <!-- Ara Butonu -->
-      <q-btn
-        label="Ara"
-        color="primary"
-        class="search-btn"
-        @click="onSearch"
-        unelevated
+      <q-select
+        v-model="selectedCity"
+        :options="cityOptions"
+        filled
+        label="Şehir"
+        class="q-mr-md"
+        dense
+        clearable
       />
+
+      <q-btn label="Ara" color="primary" unelevated @click="onSearch" />
     </div>
 
     <!-- Staj İlanları Listesi -->
-    <div class="q-pa-md">
+    <div class="q-pa-md internship-list">
       <q-card
         v-for="internship in filteredInternships"
         :key="internship.id"
-        class="q-mb-md"
+        class="internship-card q-mb-md"
       >
         <q-card-section>
-          <h3>{{ internship.title }}</h3>
+          <h3 class="text-primary">{{ internship.field }} Stajyeri</h3>
           <p><strong>Şirket:</strong> {{ internship.company }}</p>
           <p><strong>Şehir:</strong> {{ internship.city }}</p>
           <p><strong>Alan:</strong> {{ internship.field }}</p>
@@ -46,6 +52,7 @@
           <q-btn
             label="Başvur"
             color="green"
+            unelevated
             @click="applyToInternship(internship)"
           />
         </q-card-section>
@@ -57,125 +64,153 @@
 <script setup>
 import { ref, computed } from "vue";
 
-// Staj İlanları Verisi
-const internships = ref([
-  {
-    id: 1,
-    title: "Yazılım Geliştirme",
-    company: "Teknokent",
-    city: "Ankara",
-    field: "Bilgisayar Mühendisliği",
-    application_date: "2025-01-01",
-  },
-  {
-    id: 2,
-    title: "Yazılım Geliştirme",
-    company: "Teknokent",
-    city: "Ankara",
-    field: "Bilgisayar Mühendisliği",
-    application_date: "2025-01-01",
-  },
-  {
-    id: 3,
-    title: "Endüstri Stajı",
-    company: "Bilkent",
-    city: "Ankara",
-    field: "Endüstri Mühendisliği",
-    application_date: "2025-05-10",
-  },
-  {
-    id: 4,
-    title: "Pazarlama Stajı",
-    company: "BTK",
-    city: "İstanbul",
-    field: "Pazarlama",
-    application_date: "2025-03-16",
-  },
-]);
-
-// Form verileri
-const searchQuery = ref("");
-const sortOrder = ref("");
-
-// Sıralama seçenekleri
-const sortOptions = [
-  { label: "Başvuru Tarihi", value: "application_date" },
-  { label: "Staj Alanı", value: "field" },
-  { label: "İl", value: "city" },
-  { label: "Şirket Adı", value: "company" },
+// 100 farklı staj ilanı
+const internships = ref([]);
+const fields = [
+  "Bilgisayar Mühendisliği",
+  "Yapay Zeka",
+  "Endüstri Mühendisliği",
+  "Pazarlama",
+  "İş Analizi",
+  "Siber Güvenlik",
+  "Elektrik Mühendisliği",
+  "Makine Mühendisliği",
+  "Hukuk",
+  "Finans",
+  "Grafik Tasarım",
+  "İç Mimarlık",
+  "İnsan Kaynakları",
+  "Sağlık Yönetimi",
+  "Biyomedikal Mühendisliği",
+];
+const cities = [
+  "İstanbul",
+  "Ankara",
+  "İzmir",
+  "Bursa",
+  "Kocaeli",
+  "Eskişehir",
+  "Konya",
+  "Gaziantep",
+  "Antalya",
+];
+const companies = [
+  "Microsoft",
+  "Amazon",
+  "Turkcell",
+  "Siemens",
+  "TUSAŞ",
+  "Hepsiburada",
+  "Arçelik",
+  "Google",
+  "Huawei",
+  "Aselsan",
+  "Vestel",
+  "Ford Otosan",
+  "Türk Telekom",
+  "Akbank",
+  "P&G",
 ];
 
-// Arama ve sıralama işlevselliği
+// 100 farklı ilan oluştur
+for (let i = 1; i <= 100; i++) {
+  internships.value.push({
+    id: i,
+    title: `${fields[i % fields.length]} Stajı`,
+    company: companies[i % companies.length],
+    city: cities[i % cities.length],
+    field: fields[i % fields.length],
+    application_date: `2025-${(i % 12) + 1}-${(i % 28) + 1}`,
+  });
+}
+
+// Kullanıcı Girdileri
+const searchQuery = ref("");
+const selectedField = ref(null);
+const selectedCity = ref(null);
+
+// Sıralama ve Filtreleme Seçenekleri
+const fieldOptions = fields;
+const cityOptions = cities;
+
+// Gelişmiş Filtreleme
 const filteredInternships = computed(() => {
   let result = internships.value;
 
-  // Arama filtresi
   if (searchQuery.value) {
-    result = result.filter((internship) =>
-      internship.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+    result = result.filter(
+      (internship) =>
+        internship.title
+          .toLowerCase()
+          .includes(searchQuery.value.toLowerCase()) ||
+        internship.company
+          .toLowerCase()
+          .includes(searchQuery.value.toLowerCase())
     );
   }
 
-  // Sıralama
-  if (sortOrder.value) {
-    result = result.sort((a, b) => {
-      if (sortOrder.value === "application_date") {
-        return new Date(a.application_date) - new Date(b.application_date);
-      } else {
-        return a[sortOrder.value].localeCompare(b[sortOrder.value]);
-      }
-    });
+  if (selectedField.value) {
+    result = result.filter(
+      (internship) => internship.field === selectedField.value
+    );
+  }
+
+  if (selectedCity.value) {
+    result = result.filter(
+      (internship) => internship.city === selectedCity.value
+    );
   }
 
   return result;
 });
 
-// Ara butonuna tıklamaaaaaa
+// Ara Butonu Tıklama Olayı
 const onSearch = () => {
   console.log("Arama yapıldı:", searchQuery.value);
+};
+
+// Başvuru Fonksiyonu
+const applyToInternship = (internship) => {
+  alert(`${internship.field} alanındaki staj ilanına başvuruldu!`);
 };
 </script>
 
 <style scoped>
-/* Staj İlanları */
-.q-pa-md {
+/* Filtreleme Alanı */
+.search-filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+/* Staj Listesi */
+.internship-list {
+  padding: 100px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
   max-width: 1200px;
-  margin: 20px auto;
-  padding: 0 10px;
+  margin: 0 auto;
 }
 
 /* Staj Kartları */
-.q-card {
+.internship-card {
+  width: 100%; /* Eğer belirli bir genişlik belirtilmezse, konteynerin genişliği kadar olur */
+  max-width: 300px; /* Kartların maksimum genişliği olabilir */
   border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   background-color: #fff;
-  padding: 15px;
-  text-align: left;
-  height: auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.q-card:hover {
-  transform: translateY(-5px); /* Hover sırasında kart yukarı kalkar */
+
+.internship-card:hover {
+  transform: translateY(-5px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-.q-card-section h3 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: aqua;
-  margin-bottom: 10px;
-}
-.q-card-section p {
-  margin: 5px 0;
-  fonts-size: 0.9rem;
-  line-height: 1.4;
-}
-@media (max-width: 600px) {
-  .q-pa-md {
-    grid-template-columns: 1fr;
-  }
 }
 </style>

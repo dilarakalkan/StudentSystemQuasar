@@ -7,9 +7,7 @@ import CalendarPage from "src/pages/leftdrawer/CalendarPage.vue";
 import SubmissionsPage from "src/pages/leftdrawer/SubmissionsPage.vue";
 import PaymentsPage from "src/pages/leftdrawer/PaymentsPage.vue";
 
-import CoursesPage from "src/pages/leftdrawer/CoursesPage.vue"; // Eklendi ✅
-import ExamsPage from "src/pages/leftdrawer/ExamsPage.vue"; // Eklendi ✅
-import SchedulePage from "src/pages/leftdrawer/SchedulePage.vue";
+import CoursesPage from "src/pages/leftdrawer/CoursesPage.vue";
 
 const routes = [
   { path: "/", name: "Login", component: UserLogin },
@@ -25,9 +23,7 @@ const routes = [
     component: () => import("pages/leftdrawer/CalendarPage.vue"),
   },
   { path: "/courses", name: "CoursesPage", component: CoursesPage },
-  { path: "/exams", name: "ExamsPage", component: ExamsPage },
   { path: "/payments", name: "PaymentsPage", component: PaymentsPage },
-  { path: "/schedule", name: "SchedulePage", component: SchedulePage },
   { path: "/submissions", name: "SubmissionsPage", component: SubmissionsPage },
 ];
 

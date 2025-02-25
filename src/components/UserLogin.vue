@@ -7,20 +7,21 @@
         </q-card-section>
 
         <q-card-section>
-          <q-input v-model="username" label="Öğrenci Numarası"></q-input>
+          <q-input v-model="user" label="Öğrenci Numarası"></q-input>
           <q-input v-model="password" label="Şifre" type="password"></q-input>
+
           <!--Şifremi unuttum-->
           <div class="q-mt-sm text-right">
             <q-btn
               flat
-              label="Şifremi Unuttum"
+              label="ŞİFREMİ UNUTTUM"
               class="text-primary"
               @click="forgotPassword"
             ></q-btn>
           </div>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn label="Giriş" color="primary" @click="login"></q-btn>
+          <q-btn label="GİRİŞ" color="primary" @click="login"></q-btn>
         </q-card-actions>
       </q-card>
     </q-page>
@@ -32,11 +33,10 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 //reaktik veri tanımları
-const Öğrenci_numarası = ref("");
-const şifre = ref("");
+const oğrenci_numarası = ref("");
+const sifre = ref("");
 
 const router = useRouter();
-
 
 const login = () => {
   console.log("Kullanıcı adı: ${username.value}, Şifre:${password.value}");
@@ -46,7 +46,7 @@ const login = () => {
 
 <style scoped>
 .background-image {
-  background-image: url(" https://media.istockphoto.com/id/2155852442/tr/foto%C4%9Fraf/sofas-in-the-public-leisure-area-in-the-library.jpg?s=2048x2048&w=is&k=20&c=VxkAevLXydgmVCUIoxQVh2Ond58eTOCJkM-dul1YBs8=");
+  background-image: url("https://images.unsplash.com/photo-1564981797816-1043664bf78d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
   background-size: cover; /*tüm alanları kapsar*/
   background-position: center;
   min-height: 100vh;
