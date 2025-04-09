@@ -1,260 +1,354 @@
 <template>
-  <q-page class="q-pa-md bg-gradient">
-    <q-card class="q-pa-lg payment-card">
-      <q-card-section>
-        <div class="text-center">
-          <h2 class="text-primary q-mb-sm">💳 Staj Ödeme Takip Sistemi</h2>
-          <p class="form-subtitle">
-            Ödeme süreçlerinizi kolayca takip edin ve detaylara göz atın.
-          </p>
+  <q-page class="payments-page q-pa-md">
+    <!-- Başlık Bölümü -->
+    <div class="header-section q-mb-lg">
+      <h2 class="text-h4 text-weight-bold q-mb-sm">Staj Ödemeleri</h2>
+      <p class="text-subtitle1 text-grey-7">
+        Staj ödemelerinizi takip edebilir ve geçmiş ödemelerinizi
+        görüntüleyebilirsiniz.
+      </p>
+    </div>
+
+    <!-- Özet Kartları -->
+    <div class="row q-col-gutter-md q-mb-lg">
+      <div class="col-12 col-md-4">
+        <q-card class="summary-card">
+          <q-card-section>
+            <div class="row items-center">
+              <div class="col-auto">
+                <q-icon name="payments" size="3rem" class="text-primary" />
+              </div>
+              <div class="col q-ml-md">
+                <div class="text-h6">Toplam Ödeme</div>
+                <div class="text-h4 text-weight-bold text-primary">₺4,500</div>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <q-card class="summary-card">
+          <q-card-section>
+            <div class="row items-center">
+              <div class="col-auto">
+                <q-icon
+                  name="calendar_today"
+                  size="3rem"
+                  class="text-secondary"
+                />
+              </div>
+              <div class="col q-ml-md">
+                <div class="text-h6">Toplam Gün</div>
+                <div class="text-h4 text-weight-bold text-secondary">45</div>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <q-card class="summary-card">
+          <q-card-section>
+            <div class="row items-center">
+              <div class="col-auto">
+                <q-icon name="trending_up" size="3rem" class="text-positive" />
+              </div>
+              <div class="col q-ml-md">
+                <div class="text-h6">Günlük Ücret</div>
+                <div class="text-h4 text-weight-bold text-positive">₺100</div>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
+
+    <!-- Filtreler -->
+    <div class="filters-section q-mb-lg">
+      <div class="row q-col-gutter-md items-center">
+        <div class="col-12 col-md-4">
+          <q-input
+            outlined
+            v-model="search"
+            label="Ödeme Ara"
+            dense
+            class="search-input"
+          >
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
         </div>
-      </q-card-section>
-
-      <q-separator color="primary" />
-
-      <q-card-section>
-        <q-table
-          :rows="payments"
-          :columns="columns"
-          row-key="id"
-          flat
-          bordered
-          :pagination="{ rowsPerPage: 5 }"
-          class="styled-table"
-        >
-          <template v-slot:body-cell-status="props">
-            <q-td :props="props">
-              <q-badge
-                :color="getStatusColor(props.row.status)"
-                align="middle"
-                class="q-pa-xs text-white q-mb-xs"
-                style="font-size: 0.8rem"
-              >
-                {{ props.row.status }}
-              </q-badge>
-            </q-td>
-          </template>
-
-          <template v-slot:body-cell-actions="props">
-            <q-td :props="props">
-              <q-btn
-                color="primary"
-                flat
-                icon="visibility"
-                label="Detaylar"
-                @click="showDetails(props.row)"
-                style="font-size: 0.85rem; padding: 4px 8px"
-              />
-            </q-td>
-          </template>
-        </q-table>
-      </q-card-section>
-    </q-card>
-
-    <!-- Ödeme Detayları Modalı -->
-    <q-dialog v-model="paymentDetailDialog" persistent>
-      <q-card class="detail-modal">
-        <q-card-section class="row items-center q-pb-none">
-          <q-icon name="credit_card" size="30px" color="primary" />
-          <div class="text-h6 q-ml-sm" style="font-size: 1rem">
-            💡 Ödeme Detayları
-          </div>
-        </q-card-section>
-
-        <q-separator color="primary" />
-
-        <q-card-section>
-          <q-list bordered>
-            <q-item>
-              <q-item-section avatar><q-icon name="person" /></q-item-section>
-              <q-item-section>
-                <q-item-label
-                  ><b>Öğrenci Adı:</b>
-                  {{ selectedPayment.studentName }}</q-item-label
-                >
-              </q-item-section>
-            </q-item>
-
-            <q-item>
-              <q-item-section avatar><q-icon name="payments" /></q-item-section>
-              <q-item-section>
-                <q-item-label
-                  ><b>Ödeme Tutarı:</b>
-                  {{ selectedPayment.amount }} TL</q-item-label
-                >
-              </q-item-section>
-            </q-item>
-
-            <q-item>
-              <q-item-section avatar><q-icon name="event" /></q-item-section>
-              <q-item-section>
-                <q-item-label
-                  ><b>Ödeme Tarihi:</b> {{ selectedPayment.date }}</q-item-label
-                >
-              </q-item-section>
-            </q-item>
-
-            <q-item>
-              <q-item-section avatar><q-icon name="info" /></q-item-section>
-              <q-item-section>
-                <q-item-label
-                  ><b>Durum:</b> {{ selectedPayment.status }}</q-item-label
-                >
-              </q-item-section>
-            </q-item>
-
-            <q-item>
-              <q-item-section avatar
-                ><q-icon name="description"
-              /></q-item-section>
-              <q-item-section>
-                <q-item-label
-                  ><b>Açıklama:</b>
-                  {{ selectedPayment.description }}</q-item-label
-                >
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn
-            flat
-            label="Kapat"
-            color="primary"
-            v-close-popup
-            style="font-size: 0.85rem; padding: 6px 12px"
+        <div class="col-12 col-md-4">
+          <q-select
+            outlined
+            v-model="selectedMonth"
+            :options="months"
+            label="Ay Seçin"
+            dense
+            class="month-select"
           />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+        </div>
+        <div class="col-12 col-md-4">
+          <q-btn-group spread>
+            <q-btn
+              label="Tümü"
+              :color="filter === 'all' ? 'primary' : 'grey-3'"
+              :text-color="filter === 'all' ? 'white' : 'black'"
+              @click="filter = 'all'"
+            />
+            <q-btn
+              label="Ödenenler"
+              :color="filter === 'paid' ? 'positive' : 'grey-3'"
+              :text-color="filter === 'paid' ? 'white' : 'black'"
+              @click="filter = 'paid'"
+            />
+            <q-btn
+              label="Bekleyenler"
+              :color="filter === 'pending' ? 'warning' : 'grey-3'"
+              :text-color="filter === 'pending' ? 'white' : 'black'"
+              @click="filter = 'pending'"
+            />
+          </q-btn-group>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ödeme Tablosu -->
+    <q-card flat bordered class="payment-table-card">
+      <q-table
+        :rows="payments"
+        :columns="columns"
+        row-key="id"
+        v-model:pagination="pagination"
+        :loading="loading"
+        class="payments-table"
+      >
+        <template v-slot:body-cell-status="props">
+          <q-td :props="props">
+            <q-chip
+              :color="getStatusColor(props.value)"
+              text-color="white"
+              size="sm"
+            >
+              {{ props.value }}
+            </q-chip>
+          </q-td>
+        </template>
+
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props">
+            <q-btn
+              flat
+              round
+              color="primary"
+              icon="visibility"
+              size="sm"
+              @click="viewPaymentDetails(props.row)"
+            >
+              <q-tooltip>Detayları Görüntüle</q-tooltip>
+            </q-btn>
+            <q-btn
+              flat
+              round
+              color="secondary"
+              icon="file_download"
+              size="sm"
+              @click="downloadReceipt(props.row)"
+            >
+              <q-tooltip>Makbuzu İndir</q-tooltip>
+            </q-btn>
+          </q-td>
+        </template>
+      </q-table>
+    </q-card>
   </q-page>
 </template>
 
 <script setup>
 import { ref } from "vue";
 
+const search = ref("");
+const selectedMonth = ref(null);
+const filter = ref("all");
+const loading = ref(false);
+
+const months = [
+  "Ocak",
+  "Şubat",
+  "Mart",
+  "Nisan",
+  "Mayıs",
+  "Haziran",
+  "Temmuz",
+  "Ağustos",
+  "Eylül",
+  "Ekim",
+  "Kasım",
+  "Aralık",
+];
+
 const columns = [
   {
-    name: "studentName",
-    label: "👩‍🎓 Öğrenci Adı",
-    field: "studentName",
+    name: "period",
+    label: "Dönem",
+    field: "period",
     align: "left",
+    sortable: true,
+  },
+  {
+    name: "startDate",
+    label: "Başlangıç",
+    field: "startDate",
+    align: "left",
+    sortable: true,
+  },
+  {
+    name: "endDate",
+    label: "Bitiş",
+    field: "endDate",
+    align: "left",
+    sortable: true,
+  },
+  {
+    name: "days",
+    label: "Gün",
+    field: "days",
+    align: "center",
+    sortable: true,
   },
   {
     name: "amount",
-    label: "💰 Tutar (TL)",
+    label: "Tutar",
     field: "amount",
-    align: "left",
+    align: "right",
     sortable: true,
   },
   {
     name: "status",
-    label: "📌 Durum",
+    label: "Durum",
     field: "status",
-    align: "left",
+    align: "center",
     sortable: true,
   },
-  { name: "date", label: "📅 Ödeme Tarihi", field: "date", align: "left" },
-  { name: "actions", label: "⚡ İşlemler", field: "actions", align: "center" },
+  {
+    name: "actions",
+    label: "İşlemler",
+    field: "actions",
+    align: "center",
+  },
 ];
 
-const payments = ref([
+const payments = [
   {
     id: 1,
-    studentName: "Dilara Kalkan",
-    amount: 4500,
-    status: "Beklemede",
-    date: "2025-03-15",
-    description: "Staj süreci tamamlandıktan sonra ödenecektir.",
+    period: "2024 Bahar",
+    startDate: "01.02.2024",
+    endDate: "01.03.2024",
+    days: 20,
+    amount: "₺2,000",
+    status: "Ödendi",
   },
-]);
+  {
+    id: 2,
+    period: "2024 Yaz",
+    startDate: "01.07.2024",
+    endDate: "01.08.2024",
+    days: 25,
+    amount: "₺2,500",
+    status: "Beklemede",
+  },
+];
+
+const pagination = ref({
+  sortBy: "period",
+  descending: false,
+  page: 1,
+  rowsPerPage: 10,
+});
 
 const getStatusColor = (status) => {
-  return status === "Ödendi"
-    ? "green"
-    : status === "Beklemede"
-    ? "orange"
-    : "red";
+  switch (status) {
+    case "Ödendi":
+      return "positive";
+    case "Beklemede":
+      return "warning";
+    default:
+      return "grey";
+  }
 };
 
-const paymentDetailDialog = ref(false);
-const selectedPayment = ref({});
+const viewPaymentDetails = (payment) => {
+  // Ödeme detayları görüntüleme fonksiyonu
+  console.log("Ödeme detayları:", payment);
+};
 
-const showDetails = (payment) => {
-  selectedPayment.value = payment;
-  paymentDetailDialog.value = true;
+const downloadReceipt = (payment) => {
+  // Makbuz indirme fonksiyonu
+  console.log("Makbuz indiriliyor:", payment);
 };
 </script>
 
-<style scoped>
-.bg-gradient {
-  background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.payment-card {
-  width: 100%;
-  max-width: 900px;
-  margin: auto;
-  border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-}
-
-.text-primary {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #1976d2;
-}
-
-.form-subtitle {
-  font-size: 1rem;
-  color: #555;
-}
-
-.styled-table {
-  border-radius: 15px;
-  overflow: hidden;
-}
-
-.q-table th,
-.q-table td {
-  text-align: center;
-  padding: 12px;
-}
-
-.q-badge {
-  border-radius: 10px;
-  font-weight: bold;
-  font-size: 0.85rem;
-  padding: 4px 8px;
-}
-
-.detail-modal {
-  border-radius: 20px;
-  min-width: 400px;
-  padding: 16px;
-}
-
-.q-dialog__inner--minimized > div {
-  width: 90%;
-}
-
-@media (max-width: 768px) {
-  .payment-card {
-    padding: 16px;
-    max-width: 100%;
+<style lang="scss">
+.payments-page {
+  .header-section {
+    background: linear-gradient(135deg, #1976d2 0%, #64b5f6 100%);
+    padding: 2rem;
+    border-radius: 8px;
+    color: white;
+    margin-bottom: 2rem;
   }
 
-  .text-primary {
-    font-size: 1.8rem;
+  .summary-card {
+    transition: transform 0.2s;
+    border-radius: 8px;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
   }
 
-  .detail-modal {
-    min-width: 100%;
+  .payment-table-card {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .payments-table {
+    .q-table__card {
+      border-radius: 8px;
+    }
+
+    thead tr th {
+      font-weight: bold;
+      background-color: #f5f5f5;
+    }
+
+    tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+  }
+
+  .filters-section {
+    .search-input,
+    .month-select {
+      .q-field__control {
+        border-radius: 8px;
+      }
+    }
+  }
+
+  .q-btn-group {
+    border-radius: 8px;
+    overflow: hidden;
+
+    .q-btn {
+      padding: 8px 16px;
+    }
+  }
+
+  .q-chip {
+    font-weight: 500;
   }
 }
 </style>

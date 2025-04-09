@@ -1,228 +1,376 @@
 <template>
-  <q-page class="q-pa-md bg-gradient">
-    <q-card class="q-pa-md form-card">
-      <q-card-section>
-        <div class="text-center">
-          <h2 class="text-primary q-mb-md">🎓 Öğrenci Staj Başvuru Formu</h2>
-          <p class="form-subtitle">
-            Lütfen aşağıdaki bilgileri eksiksiz doldurun.
-          </p>
+  <q-page class="application-page">
+    <!-- Başlık Bölümü -->
+    <div class="page-header">
+      <h2 class="text-h4">Staj Başvuru Formu</h2>
+      <p class="text-subtitle1">Lütfen tüm alanları eksiksiz doldurunuz</p>
+    </div>
+
+    <!-- Form Bölümü -->
+    <q-form @submit="onSubmit" class="application-form">
+      <!-- Kişisel Bilgiler -->
+      <div class="form-section">
+        <div class="section-header">
+          <q-icon name="person" color="primary" size="sm" />
+          <h3 class="text-h6">Kişisel Bilgiler</h3>
         </div>
 
-        <q-form @submit.prevent="submitApplication" class="q-gutter-md">
-          <q-input
-            v-model="form.name"
-            label="Ad Soyad"
-            filled
-            dense
-            required
-            prefix-icon="person"
-          />
-          <q-input
-            v-model="form.school"
-            label="Okul"
-            filled
-            dense
-            required
-            prefix-icon="school"
-          />
-          <q-input
-            v-model="form.department"
-            label="Bölüm"
-            filled
-            dense
-            required
-            prefix-icon="work"
-          />
-          <q-input
-            v-model="form.gpa"
-            label="Okul Ortalaması (örn: 3.40)"
-            filled
-            dense
-            type="number"
-            step="0.01"
-            min="0"
-            max="4"
-            required
-            prefix-icon="trending_up"
-          />
+        <div class="row q-col-gutter-md">
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model="form.name"
+              label="Ad Soyad"
+              outlined
+              class="custom-input"
+              :rules="[(val) => !!val || 'Bu alan zorunludur']"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model="form.studentId"
+              label="Öğrenci Numarası"
+              outlined
+              class="custom-input"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model="form.email"
+              label="E-posta"
+              type="email"
+              outlined
+              class="custom-input"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model="form.phone"
+              label="Telefon"
+              outlined
+              mask="(###) ### ## ##"
+              class="custom-input"
+            />
+          </div>
+        </div>
+      </div>
 
-          <q-select
-            v-model="form.experience"
-            :options="['Var', 'Yok']"
-            label="Staj Deneyimi"
-            filled
-            dense
-            required
-            prefix-icon="history_edu"
-          />
+      <!-- Eğitim Bilgileri -->
+      <div class="form-section">
+        <div class="section-header">
+          <q-icon name="school" color="primary" size="sm" />
+          <h3 class="text-h6">Eğitim Bilgileri</h3>
+        </div>
 
-          <q-select
-            v-model="form.duration"
-            :options="['20 Gün', '60 Gün', '6 Ay']"
-            label="Staj Süresi"
-            filled
-            dense
-            required
-            prefix-icon="schedule"
-          />
+        <div class="row q-col-gutter-md">
+          <div class="col-12 col-md-6">
+            <q-select
+              v-model="form.faculty"
+              :options="faculties"
+              label="Fakülte"
+              outlined
+              class="custom-input"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <q-select
+              v-model="form.department"
+              :options="departments"
+              label="Bölüm"
+              outlined
+              class="custom-input"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <q-select
+              v-model="form.grade"
+              :options="['1', '2', '3', '4']"
+              label="Sınıf"
+              outlined
+              class="custom-input"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model="form.gpa"
+              label="GANO"
+              type="number"
+              outlined
+              class="custom-input"
+            />
+          </div>
+        </div>
+      </div>
 
-          <q-input
-            v-model="form.phone"
-            label="Telefon Numarası"
-            filled
-            dense
-            mask="(###) ### ## ##"
-            required
-            prefix-icon="phone"
-          />
+      <!-- Staj Bilgileri -->
+      <div class="form-section">
+        <div class="section-header">
+          <q-icon name="work" color="primary" size="sm" />
+          <h3 class="text-h6">Staj Bilgileri</h3>
+        </div>
 
-          <q-input
-            v-model="form.email"
-            label="E-posta Adresi"
-            type="email"
-            filled
-            dense
-            required
-            prefix-icon="email"
-          />
+        <div class="row q-col-gutter-md">
+          <div class="col-12 col-md-6">
+            <q-select
+              v-model="form.internshipType"
+              :options="['Zorunlu Staj', 'Gönüllü Staj']"
+              label="Staj Türü"
+              outlined
+              class="custom-input"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model="form.company"
+              label="Şirket Adı"
+              outlined
+              class="custom-input"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model="form.startDate"
+              label="Başlangıç Tarihi"
+              type="date"
+              outlined
+              class="custom-input"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model="form.endDate"
+              label="Bitiş Tarihi"
+              type="date"
+              outlined
+              class="custom-input"
+            />
+          </div>
+          <div class="col-12">
+            <q-input
+              v-model="form.description"
+              label="Staj Açıklaması"
+              type="textarea"
+              outlined
+              class="custom-input"
+            />
+          </div>
+        </div>
+      </div>
 
-          <q-input
-            v-model="form.github"
-            label="GitHub"
-            filled
-            dense
-            prefix-icon="code"
-            placeholder="https://github.com/kullaniciadi"
-          />
+      <!-- Belgeler -->
+      <div class="form-section">
+        <div class="section-header">
+          <q-icon name="attach_file" color="primary" size="sm" />
+          <h3 class="text-h6">Belgeler</h3>
+        </div>
 
-          <q-input
-            v-model="form.linkedin"
-            label="LinkedIn"
-            filled
-            dense
-            prefix-icon="business"
-            placeholder="https://linkedin.com/in/kullaniciadi"
-          />
+        <div class="row q-col-gutter-md">
+          <div class="col-12">
+            <q-file
+              v-model="form.transcript"
+              label="Transkript"
+              outlined
+              class="custom-input"
+              accept=".pdf"
+            >
+              <template v-slot:prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
+          </div>
+          <div class="col-12">
+            <q-file
+              v-model="form.internshipForm"
+              label="Cv Yükle"
+              outlined
+              class="custom-input"
+              accept=".pdf"
+            >
+              <template v-slot:prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
+          </div>
+        </div>
+      </div>
 
-          <q-input
-            v-model="form.coverLetter"
-            label="Ön Yazı"
-            filled
-            dense
-            type="textarea"
-            autogrow
-            counter
-            maxlength="500"
-            prefix-icon="edit"
-            hint="Kendinizi ve başvuru nedeninizi kısaca açıklayın. (Max: 500 karakter)"
-          />
-
-          <q-btn
-            label="🚀 Başvuruyu Gönder"
-            color="primary"
-            class="q-mt-lg submit-btn"
-            type="submit"
-            unelevated
-          />
-        </q-form>
-      </q-card-section>
-    </q-card>
+      <!-- Form Butonları -->
+      <div class="form-actions">
+        <q-btn
+          label="Temizle"
+          type="reset"
+          color="grey-7"
+          flat
+          class="q-mr-sm"
+        />
+        <q-btn
+          label="Başvuruyu Kaydet"
+          type="submit"
+          color="primary"
+          unelevated
+        />
+      </div>
+    </q-form>
   </q-page>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useQuasar } from "quasar";
 
-// Başvuru ID'sini route'dan alıyoruz
-const route = useRoute();
-const router = useRouter();
-const internshipId = route.params.id;
+const $q = useQuasar();
 
-// Form verileri
 const form = ref({
   name: "",
-  school: "",
-  department: "",
-  gpa: null,
-  experience: null,
-  duration: null,
-  phone: "",
+  studentId: "",
   email: "",
-  github: "",
-  linkedin: "",
-  coverLetter: "",
+  phone: "",
+  faculty: null,
+  department: null,
+  grade: null,
+  gpa: null,
+  internshipType: null,
+  company: "",
+  startDate: "",
+  endDate: "",
+  description: "",
+  transcript: null,
+  internshipForm: null,
 });
 
-// Başvuru gönderme işlemi
-const submitApplication = () => {
-  const applicationData = {
-    internshipId: internshipId,
-    ...form.value,
-  };
+const faculties = [
+  "Mühendislik Fakültesi",
+  "İktisadi ve İdari Bilimler Fakültesi",
+  "Fen Fakültesi",
+  "Hukuk Fakültesi",
+];
 
-  console.log("Başvuru Verileri:", applicationData);
+const departments = [
+  "Bilgisayar Mühendisliği",
+  "Elektrik-Elektronik Mühendisliği",
+  "Makine Mühendisliği",
+  "Endüstri Mühendisliği",
+];
 
-  router.push("/");
+const onSubmit = () => {
   $q.notify({
     type: "positive",
-    message: "🎉 Başvurunuz başarıyla gönderildi!",
-    timeout: 3000,
+    message: "Başvurunuz başarıyla gönderildi!",
   });
 };
 </script>
-
 <style scoped>
-.bg-gradient {
-  background: linear-gradient(135deg, #e3f2fd 0%, #fff 100%);
-  min-height: 100vh;
+.application-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #f8fafc;
+}
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.page-header h2 {
+  margin: 0;
+  font-weight: 700;
+}
+.page-header p {
+  margin-top: 0.5rem;
+  opacity: 0.9;
 }
 
-.form-card {
-  max-width: 700px;
-  margin: 40px auto;
-  border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  background: #ffffff;
+.application-form,
+.form-section {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  margin-bottom: 2.5rem;
+  border: 1px solid #e2e8f0;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+.section-header h3 {
+  margin: 0 0 0 0.5rem;
+  color: #2d3748;
 }
 
-.text-primary {
-  font-size: 2rem;
-  font-weight: bold;
+.custom-input {
+  margin-bottom: 0.5rem;
+}
+.custom-input :deep(.q-field__control) {
+  height: 48px;
+}
+.custom-input :deep(.q-field__label) {
+  top: 12px;
+  font-size: 0.95rem;
+  color: #4a5568;
 }
 
-.form-subtitle {
-  font-size: 1rem;
-  color: #555;
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+.form-actions .q-btn {
+  min-width: 150px;
+  padding: 10px 24px;
 }
 
-.q-input,
-.q-select {
-  border-radius: 10px;
-  background-color: #f9f9f9;
+/* Hover & Focus */
+.form-section:hover,
+.custom-input:hover :deep(.q-field__control) {
+  border-color: #2196f3;
+}
+:deep(.q-field--outlined .q-field__control:hover),
+:deep(.q-field--focused .q-field__control) {
+  border-color: #1976d2 !important;
 }
 
-.q-input__inner,
-.q-select__inner {
-  border: 1px solid #dcdfe4;
+/* Responsive */
+@media (max-width: 768px) {
+  .application-page {
+    padding: 1rem;
+  }
+  .page-header,
+  .application-form {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .form-section {
+    padding: 1rem;
+  }
+  .form-actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .form-actions .q-btn {
+    width: 100%;
+  }
 }
 
-.q-input__inner:hover,
-.q-select__inner:hover {
-  border-color: #1976d2;
+/* Animations */
+.form-section,
+.q-btn {
+  transition: all 0.3s ease;
+}
+.q-btn:hover {
+  transform: translateY(-2px);
 }
 
-.submit-btn {
-  width: 100%;
-  padding: 12px 0;
-  font-size: 1.2rem;
-  border-radius: 10px;
-  transition: transform 0.2s ease;
-}
-
-.submit-btn:hover {
-  transform: scale(1.03);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+/* Consolidated Border Radius */
+:deep(.q-field--outlined .q-field__control) {
+  border-radius: 8px;
 }
 </style>
